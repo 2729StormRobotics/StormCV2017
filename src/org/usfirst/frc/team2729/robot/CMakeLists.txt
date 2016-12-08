@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 2.8)
-project(RobotVision)
-find_package(OpenCV REQUIRED)
-add_executable(RobotVision RobotVision.cpp)
-target_link_libraries(RobotVision ${OpenCV_LIBS})

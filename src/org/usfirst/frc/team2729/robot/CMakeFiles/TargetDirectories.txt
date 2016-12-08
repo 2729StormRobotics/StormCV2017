@@ -1,3 +1,0 @@
-/Users/kunalpatel/Documents/Storm/StormCV2017/src/org/usfirst/frc/team2729/robot/CMakeFiles/edit_cache.dir
-/Users/kunalpatel/Documents/Storm/StormCV2017/src/org/usfirst/frc/team2729/robot/CMakeFiles/rebuild_cache.dir
-/Users/kunalpatel/Documents/Storm/StormCV2017/src/org/usfirst/frc/team2729/robot/CMakeFiles/RobotVision.dir
