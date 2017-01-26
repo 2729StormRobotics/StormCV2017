@@ -1,15 +1,7 @@
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-from builtins import (
-         bytes, dict, int, list, object, range, str,
-         ascii, chr, hex, input, next, oct, open,
-         pow, round, super,
-         filter, map, zip)
 import cv2
 import numpy
 import math
 from enum import Enum
-
 
 class Retrotape:
     """
@@ -49,6 +41,21 @@ class Retrotape:
 
         self.find_contours_output = None
 
+        self.__filter_contours_contours = self.find_contours_output
+        self.__filter_contours_min_area = 0.0
+        self.__filter_contours_min_perimeter = 0.0
+        self.__filter_contours_min_width = 0.0
+        self.__filter_contours_max_width = 1000.0
+        self.__filter_contours_min_height = 0.0
+        self.__filter_contours_max_height = 1000.0
+        self.__filter_contours_solidity = [0, 100]
+        self.__filter_contours_max_vertices = 1000.0
+        self.__filter_contours_min_vertices = 4.0
+        self.__filter_contours_min_ratio = 0.0
+        self.__filter_contours_max_ratio = 1000.0
+
+        self.filter_contours_output = None
+
 
     def process(self, source0):
         """
@@ -69,6 +76,10 @@ class Retrotape:
         # Step Find_Contours0:
         self.__find_contours_input = self.cv_dilate_output
         (self.find_contours_output) = self.__find_contours(self.__find_contours_input, self.__find_contours_external_only)
+
+        # Step Filter_Contours0:
+        self.__filter_contours_contours = self.find_contours_output
+        (self.filter_contours_output) = self.__filter_contours(self.__filter_contours_contours, self.__filter_contours_min_area, self.__filter_contours_min_perimeter, self.__filter_contours_min_width, self.__filter_contours_max_width, self.__filter_contours_min_height, self.__filter_contours_max_height, self.__filter_contours_solidity, self.__filter_contours_max_vertices, self.__filter_contours_min_vertices, self.__filter_contours_min_ratio, self.__filter_contours_max_ratio)
 
 
     @staticmethod
@@ -129,14 +140,53 @@ class Retrotape:
         else:
             mode = cv2.RETR_LIST
         method = cv2.CHAIN_APPROX_SIMPLE
-        tmp_contours = cv2.findContours(input, mode=mode, method=method)
-        if len(tmp_contours) >= 1:
-            im2 = tmp_contours[0]
-        if len(tmp_contours) >= 2:
-            contours = tmp_contours[1]
-        if len(tmp_contours) >= 3:
-            hierarchy = tmp_contours[2]
+        im2, contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
         return contours
+
+    @staticmethod
+    def __filter_contours(input_contours, min_area, min_perimeter, min_width, max_width,
+                        min_height, max_height, solidity, max_vertex_count, min_vertex_count,
+                        min_ratio, max_ratio):
+        """Filters out contours that do not meet certain criteria.
+        Args:
+            input_contours: Contours as a list of numpy.ndarray.
+            min_area: The minimum area of a contour that will be kept.
+            min_perimeter: The minimum perimeter of a contour that will be kept.
+            min_width: Minimum width of a contour.
+            max_width: MaxWidth maximum width.
+            min_height: Minimum height.
+            max_height: Maximimum height.
+            solidity: The minimum and maximum solidity of a contour.
+            min_vertex_count: Minimum vertex Count of the contours.
+            max_vertex_count: Maximum vertex Count.
+            min_ratio: Minimum ratio of width to height.
+            max_ratio: Maximum ratio of width to height.
+        Returns:
+            Contours as a list of numpy.ndarray.
+        """
+        output = []
+        for contour in input_contours:
+            x,y,w,h = cv2.boundingRect(contour)
+            if (w < min_width or w > max_width):
+                continue
+            if (h < min_height or h > max_height):
+                continue
+            area = cv2.contourArea(contour)
+            if (area < min_area):
+                continue
+            if (cv2.arcLength(contour, True) < min_perimeter):
+                continue
+            hull = cv2.convexHull(contour)
+            solid = 100 * area / cv2.contourArea(hull)
+            if (solid < solidity[0] or solid > solidity[1]):
+                continue
+            if (len(contour) < min_vertex_count or len(contour) > max_vertex_count):
+                continue
+            ratio = (float)(w) / h
+            if (ratio < min_ratio or ratio > max_ratio):
+                continue
+            output.append(contour)
+        return output
 
 
 

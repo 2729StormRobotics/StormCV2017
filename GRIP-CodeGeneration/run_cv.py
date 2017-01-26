@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 """
 Sample program that uses a generated GRIP pipeline to detect red areas in an image and publish them to NetworkTables.
@@ -7,12 +7,13 @@ Sample program that uses a generated GRIP pipeline to detect red areas in an ima
 import cv2
 from networktables import NetworkTables
 from networktables import NetworkTable
-from retrotape_b import Retrotape
+from retrotape import Retrotape
 import time
 import logging
-
+import numpy as np
 
 def extra_processing(pipeline):
+    #time.sleep(1)
     """
     Performs extra processing on the pipeline's outputs and publishes data to NetworkTables.
     :param pipeline: the pipeline that just processed an image
@@ -22,7 +23,8 @@ def extra_processing(pipeline):
     center_y_positions = []
     widths = []
     heights = []
-
+    areas = []
+    final_area = 0
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
@@ -30,6 +32,8 @@ def extra_processing(pipeline):
         center_y_positions.append(y + h / w)
         widths.append(w)
         heights.append(y)
+        areas.append(w*h)
+        """
         print("x")
         print(x)
         print("y")
@@ -38,14 +42,24 @@ def extra_processing(pipeline):
         print(w)
         print("h")
         print(h)
-
+        """
+       #print("area: {:d}estimated dist: {:d}".format(area, 1))
     # Publish to the '/vision/red_areas' network table
+   # print("Posting Data...")
+    try:
+        final_area = areas[0]+areas[1]
+    except:
+        ""
+    #print(center_x_positions)
+    #print(center_y_positions)
     table = NetworkTables.getTable('Vision')
     table.putNumberArray('x', center_x_positions)
     table.putNumberArray('y', center_y_positions)
     table.putNumberArray('width', widths)
     table.putNumberArray('height', heights)
-
+    table.putNumberArray('area', areas)
+    #table.putNumber('final area', final_area)
+    return final_area
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
@@ -53,25 +67,36 @@ def main():
     #NetworkTable.setTeam('2729')
     #NetworkTables.setClientMode()
     #NetworkTables.setIPAddress('10.27.29.202')
-    NetworkTables.initialize(server='10.27.29.205')
-
-    table = NetworkTables.getTable('/A/B')
-    table.putNumber('dsTime', 100)
-    time.sleep(5)
-    
-    print('Creating video capture')
-    cap = cv2.VideoCapture(0)
+    NetworkTables.initialize(server='10.27.29.100')
 
     print('Creating pipeline')
     pipeline = Retrotape()
 
+    print('Creating video capture')
+    #stream = cv2
+    #cap = cv2.VideoCapture("http://localhost:1181/?action=stream")
+    cap = cv2.VideoCapture(0)
     print('Running pipeline')
+    iteration = 0
+    total = 0
     while cap.isOpened():
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)
-            extra_processing(pipeline)
+            total += extra_processing(pipeline)
+            iteration+=1
+            #print(iteration)
+            #print(total)
 
+            #***EQUATION DISTANCE VS AREA*** 53111e^(-1.702x)
+
+
+            if(iteration%30 == 0):
+                table = NetworkTables.getTable('Vision')
+                table.putNumber('Average Area', total/30)
+                print(total / 30)
+                iteration = 0
+                total = 0
     print('Capture closed')
 
 if __name__ == '__main__':
