@@ -33,19 +33,8 @@ def extra_processing(pipeline):
         widths.append(w)
         heights.append(y)
         areas.append(w*h)
-        """
-        print("x")
-        print(x)
-        print("y")
-        print(y)
-        print("w")
-        print(w)
-        print("h")
-        print(h)
-        """
-       #print("area: {:d}estimated dist: {:d}".format(area, 1))
-    # Publish to the '/vision/red_areas' network table
-   # print("Posting Data...")
+    #Publish to the '/vision/red_areas' network table
+    #print("Posting Data...")
     try:
         final_area = areas[0]+areas[1]
     except:
@@ -83,20 +72,22 @@ def main():
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)
-            total += extra_processing(pipeline)
+            currArea = extra_processing(pipeline)
+            total += currArea
             iteration+=1
             #print(iteration)
             #print(total)
 
             #***EQUATION DISTANCE VS AREA*** 53111e^(-1.702x)
-
-
+            #***Inverse*** ln(A/53111)/-1.702 = d
             if(iteration%30 == 0):
                 table = NetworkTables.getTable('Vision')
                 table.putNumber('Average Area', total/30)
                 print(total / 30)
                 iteration = 0
                 total = 0
+            print("area: {:d}estimated dist: {:d}".format(area, 1))
+            table.putNumber('Distance', np.log(currArea/5311)/-1.702)
     print('Capture closed')
 
 if __name__ == '__main__':
