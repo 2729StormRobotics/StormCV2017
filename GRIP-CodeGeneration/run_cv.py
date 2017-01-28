@@ -102,12 +102,12 @@ def main():
 
     print('Creating video capture')
     # stream = cv2
-    # cap = cv2.VideoCapture("http://localhost:1181/?action=stream")
+    #cap = cv2.VideoCapture("http://localhost:1181/?action=stream")
     cap = cv2.VideoCapture(0)
     print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 720)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 544)
     cap.set(cv2.CAP_PROP_EXPOSURE, 0)
     cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
 
