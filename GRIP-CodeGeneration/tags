@@ -1,0 +1,36 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+GripRunner.py	GripRunner.py	1;"	kind:file	line:1
+MyFilter	mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	/^class MyFilter:$/;"	kind:class	line:5
+Retrotape	retrotape.py	/^class Retrotape:$/;"	kind:class	line:6
+VideoCamera	camera.py	/^class VideoCamera(object):$/;"	kind:class	line:4
+__cv_dilate	retrotape.py	/^    def __cv_dilate(src, kernel, anchor, iterations, border_type, border_value):$/;"	kind:member	line:115
+__cv_erode	retrotape.py	/^    def __cv_erode(src, kernel, anchor, iterations, border_type, border_value):$/;"	kind:member	line:100
+__del__	camera.py	/^    def __del__(self):$/;"	kind:member	line:14
+__filter_contours	retrotape.py	/^    def __filter_contours(input_contours, min_area, min_perimeter, min_width, max_width,$/;"	kind:member	line:147
+__find_contours	retrotape.py	/^    def __find_contours(input, external_only):$/;"	kind:member	line:130
+__hsv_threshold	retrotape.py	/^    def __hsv_threshold(input, hue, sat, val):$/;"	kind:member	line:86
+__init__	camera.py	/^    def __init__(self):$/;"	kind:member	line:5
+__init__	retrotape.py	/^    def __init__(self):$/;"	kind:member	line:11
+app	main.py	/^app = Flask(__name__)$/;"	kind:variable	line:6
+camera.py	camera.py	1;"	kind:file	line:1
+example_filter.py	mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	1;"	kind:file	line:1
+exp.py	exp.py	1;"	kind:file	line:1
+extra_processing	GripRunner.py	/^def extra_processing(pipeline: GripPipeline):$/;"	kind:function	line:18
+extra_processing	run_cv.py	/^def extra_processing(pipeline):$/;"	kind:function	line:16
+gen	main.py	/^def gen(camera):$/;"	kind:function	line:12
+get_frame	camera.py	/^    def get_frame(self):$/;"	kind:member	line:17
+index	main.py	/^def index():$/;"	kind:function	line:9
+init_filter	mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	/^def init_filter():$/;"	kind:function	line:25
+main	GripRunner.py	/^def main():$/;"	kind:function	line:29
+main	run_cv.py	/^def main():$/;"	kind:function	line:56
+main.py	main.py	1;"	kind:file	line:1
+process	mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	/^    def process(self, img):$/;"	kind:member	line:7
+process	retrotape.py	/^    def process(self, source0):$/;"	kind:member	line:60
+retrotape.py	retrotape.py	1;"	kind:file	line:1
+run_cv.py	run_cv.py	1;"	kind:file	line:1
+video_feed	main.py	/^def video_feed():$/;"	kind:function	line:19

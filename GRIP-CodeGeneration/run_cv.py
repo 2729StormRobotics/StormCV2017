@@ -5,15 +5,18 @@ Sample program that uses a generated GRIP pipeline to detect red areas in an ima
 """
 
 import cv2
+import threading
 from networktables import NetworkTables
 from networktables import NetworkTable
 from retrotape import Retrotape
 import time
 import logging
 import numpy as np
+from collections import OrderedDict
+
 
 def extra_processing(pipeline):
-    #time.sleep(1)
+    # time.sleep(1)
     """
     Performs extra processing on the pipeline's outputs and publishes data to NetworkTables.
     :param pipeline: the pipeline that just processed an image
@@ -28,44 +31,86 @@ def extra_processing(pipeline):
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
-        center_x_positions.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
-        center_y_positions.append(y + h / w)
+        # X and Y are coordinates of the top-left corner of the bounding box
+        center_x_positions.append(x + w / 2)
+        center_y_positions.append(y + h / 2)
         widths.append(w)
-        heights.append(y)
-        areas.append(w*h)
-    #Publish to the '/vision/red_areas' network table
-    #print("Posting Data...")
+        heights.append(h)
+        # areas.append(w * h) lw calculation
+        areas.append(cv2.contourArea(contour))
+    # Publish to the '/vision/red_areas' network table
+    # print("Posting Data...")
     try:
-        final_area = areas[0]+areas[1]
+        final_area = areas[0] + areas[1]
     except:
         ""
-    #print(center_x_positions)
-    #print(center_y_positions)
+    # print(center_x_positions)
+    # print(center_y_positions)
     table = NetworkTables.getTable('Vision')
     table.putNumberArray('x', center_x_positions)
     table.putNumberArray('y', center_y_positions)
     table.putNumberArray('width', widths)
     table.putNumberArray('height', heights)
     table.putNumberArray('area', areas)
-    #table.putNumber('final area', final_area)
+    # table.putNumber('final area', final_area)
     return final_area
 
+
 def main():
-    areaHash = {100000:.0, 13000:.7, 11850:.8, 9370:.9, 7830: 1, 6500: 1.1, 5470:1.2, 4650:1.3, 3925:1.4, 3500:1.5, 3100:1.6, 2770:1.7, 2390:1.8, 2260:1.9, 2060:2, 1880:2.1, 1735:2.2, 1620:2.3, 1455:2.4, 1375:2.5, 1210:2.6, 1035:2.7, 1000:2.8, 975:2.9, 940:3, 845:3.1, 780:3.2, 750:3.3, 695:3.4, 655:3.5, 630:3.6, -100: 10}
+    areaHash = {
+        13000: .7,
+        11850: .8,
+        9370: .9,
+        7830: 1,
+        6500: 1.1,
+        5470: 1.2,
+        4650: 1.3,
+        3925: 1.4,
+        3500: 1.5,
+        3100: 1.6,
+        2770: 1.7,
+        2390: 1.8,
+        2260: 1.9,
+        2060: 2,
+        1880: 2.1,
+        1735: 2.2,
+        1620: 2.3,
+        1455: 2.4,
+        1375: 2.5,
+        1210: 2.6,
+        1035: 2.7,
+        1000: 2.8,
+        975: 2.9,
+        940: 3,
+        845: 3.1,
+        780: 3.2,
+        750: 3.3,
+        695: 3.4,
+        655: 3.5,
+        630: 3.6}
+
+    areaHash = OrderedDict(sorted(areaHash.items(), key = lambda areaHash: areaHash[0]))
     logging.basicConfig(level=logging.DEBUG)
     print('Initializing NetworkTables')
-    #NetworkTable.setTeam('2729')
-    #NetworkTables.setClientMode()
-    #NetworkTables.setIPAddress('10.27.29.202')
+    # NetworkTable.setTeam('2729')
+    # NetworkTables.setClientMode()
+    # NetworkTables.setIPAddress('10.27.29.202')
     NetworkTables.initialize(server='10.27.29.100')
 
     print('Creating pipeline')
     pipeline = Retrotape()
 
     print('Creating video capture')
-    #stream = cv2
-    #cap = cv2.VideoCapture("http://localhost:1181/?action=stream")
+    # stream = cv2
+    # cap = cv2.VideoCapture("http://localhost:1181/?action=stream")
     cap = cv2.VideoCapture(0)
+    print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 720)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    cap.set(cv2.CAP_PROP_EXPOSURE, 0)
+    cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
+
     print('Running pipeline')
     iteration = 0
     total = 0
@@ -75,33 +120,51 @@ def main():
             pipeline.process(frame)
             currArea = extra_processing(pipeline)
             total += currArea
-            iteration+=1
-            #print(iteration)
-            #print(total)
+            iteration += 1
+            # print(iteration)
+            # print(total)
             table = NetworkTables.getTable('Vision')
-            #***EQUATION DISTANCE VS AREA*** 53111e^(-1.702x)
-            #***Inverse*** ln(A/53111)/-1.702 = d
-            #***Inverse Test2 -1.0142ln(.0000578938x)
-            if(iteration%200 == 0):
-               # table = NetworkTables.getTable('Vision')
-                table.putNumber('Average Area', total/200)
+            # ***EQUATION DISTANCE VS AREA*** 53111e^(-1.702x)
+            # ***Inverse*** ln(A/53111)/-1.702 = d
+            # ***Inverse Test2 -1.0142ln(.0000578938x)
+            if(iteration % 200 == 0):
+                # table = NetworkTables.getTable('Vision')
+                table.putNumber('Average Area', total / 200)
                 print(total / 200)
                 iteration = 0
                 total = 0
-            keys = areaHash.values()
+            values = areaHash.values()
+            # print("values type: {}".format(type(values)))
             counter = 0
             estDistance = 0
-            for index in range(areaHash.keys()):
+            prevDistVal = 0
+            prevAreaVal = 0
+            for areaVal, distVal in areaHash.items():
                 counter += 1
-                if currArea < index:
-                    try:
-                        estDistance = (keys[counter] + keys[counter - 1]) / 2
-                    except:
-                        estDistance = -1.0142 * np.log(0.0000578938 * currArea)
+                # print("currArea: {:f} areaVal: {:f}".format(currArea, areaVal))
+                if currArea > 13000:
+                    estDistance = -1.0142 * np.log(0.0000578938 * currArea)
+                    if estDistance > 1.3 and estDistance < 2:
+                        estDistance -= 0.1
+                        print("areaTrend: {:f} estimated dist: {:f}".format(currArea, estDistance))
                     break
-           # if estDistance > 1.3 and  estDistance < 2:
-            #    estDistance -=0.1
-            print("area: {:f}estimated dist: {:f}".format(currArea, estDistance))
+
+                if currArea < areaVal:
+                    # print("upper: {:f} lower: {:f}".format(values.get(counter-1), values.get(counter)))
+                    try:
+                        # *****ADD SLOPE LINEARIZATION*****
+                        m = (distVal - prevDistVal)/(areaVal - prevAreaVal)
+                        b = distVal - m * areaVal
+
+                        estDistance = m * areaVal + b
+                        estDistance = (distVal + prevDistVal) / 2.0
+                        print("areaHash: {:f} estimated dist: {:f}".format(currArea, estDistance))
+                        # print("distVal: {:f} prevDistVal: {:f}".format(distVal, prevDistVal))
+                    except:
+                        ""
+                    break
+                prevDistVal = distVal
+                prevAreaVal = areaVal
             table.putNumber('Distance', estDistance)
     print('Capture closed')
 
