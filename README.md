@@ -29,9 +29,9 @@ http://wpilib.screenstepslive.com/s/4485/m/13503/l/599679-installing-eclipse-c-j
 
 ## Running the Code
 Assuming you've gotten all the installs running the code is fairly straightforward
-1. Connect both the pi and Windows machine to the same network
-2. On eclipse press WPIlib>RunOutlineViewer>StartServer
-3. Run the python code in the StormCV2017/GRIP-CodeGeneration directory
+- Connect both the pi and Windows machine to the same network
+- On eclipse press WPIlib>RunOutlineViewer>StartServer
+- Run the python code in the StormCV2017/GRIP-CodeGeneration directory
 ```
 python3 run_cy.py
 ```
