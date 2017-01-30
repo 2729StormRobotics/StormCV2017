@@ -30,6 +30,3 @@ Assuming you've gotten all the installs running the code is fairly straightforwa
 ```
 python3 run_cy.py
 ```
-
-## Who are we
-Storm Robotics NJ (2729)
