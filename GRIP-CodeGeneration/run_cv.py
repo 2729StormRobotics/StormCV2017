@@ -50,6 +50,14 @@ def extra_processing(pipeline):
     table.putNumberArray('width', widths)
     table.putNumberArray('height', heights)
     table.putNumberArray('area', areas)
+    try:
+        if (areas[0] > areas[1]):
+            table.putNumber('LeftRight', 1)
+        else:
+            table.putNumber('LeftRight', 0)
+    except:
+        ""
+
     return final_area
 
 def distanceEstimate(currArea):
@@ -154,7 +162,7 @@ def main():
                 print(total / 200)
                 iteration = 0
                 total = 0
-            
+            print("area: {:f}".format(currArea))
             estDistance = distanceEstimate(currArea)
             table.putNumber('Distance', estDistance)
     print('Capture closed')
