@@ -35,6 +35,3 @@ Assuming you've gotten all the installs running the code is fairly straightforwa
 ```
 python3 run_cy.py
 ```
-##Acknowledgments
-We learned how to run our generated GRIP code from WPILibs
-https://github.com/WPIRoboticsProjects/GRIP-code-generation
