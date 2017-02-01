@@ -113,6 +113,8 @@ def distanceEstimate(currArea):
             break
         prevDistVal = distVal
         prevAreaVal = areaVal
+    return estDistance
+
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
