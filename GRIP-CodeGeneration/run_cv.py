@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 
 
@@ -51,16 +50,7 @@ def extra_processing(pipeline):
     table.putNumberArray('width', widths)
     table.putNumberArray('height', heights)
     table.putNumberArray('area', areas)
-    try:
-        if (areas[0] > areas[1]):
-            table.putNumber('LeftRight', 1)
-        else:
-            table.putNumber('LeftRight', 0)
-    except:
-        ""
-
     return final_area
-
 
 def distanceEstimate(currArea):
     areaHash = {
@@ -95,36 +85,34 @@ def distanceEstimate(currArea):
         655: 3.5,
         630: 3.6}
 
-    estDistance = 0
-    prevDistVal = 0
-    prevAreaVal = 0
+        estDistance = 0
+        prevDistVal = 0
+        prevAreaVal = 0
 
-    areaHash = OrderedDict(sorted(areaHash.items(), key = lambda areaHash: areaHash[0]))
-    values = areaHash.values()
+        areaHash = OrderedDict(sorted(areaHash.items(), key = lambda areaHash: areaHash[0]))
+        values = areaHash.values()
 
-    for areaVal, distVal in areaHash.items():
-        if currArea > 13000:
-            estDistance = -1.0142 * np.log(0.0000578938 * currArea)
-            if estDistance > 1.3 and estDistance < 2:
-                estDistance -= 0.1
-                print("areaTrend: {:f} estimated dist: {:f}".format(currArea, estDistance))
-            break
+        for areaVal, distVal in areaHash.items():
+            if currArea > 13000:
+                estDistance = -1.0142 * np.log(0.0000578938 * currArea)
+                if estDistance > 1.3 and estDistance < 2:
+                    estDistance -= 0.1
+                    print("areaTrend: {:f} estimated dist: {:f}".format(currArea, estDistance))
+                break
 
-        if currArea < areaVal:
-            try:
-                m = (distVal - prevDistVal)/(areaVal - prevAreaVal)
-                b = distVal - (m * areaVal)
-                estDistance = m * areaVal + b
-                # estDistance = (distVal + prevDistVal) / 2.0
-                print("areaHash: {:f} estimated dist: {:f}".format(currArea, estDistance))
-                # print("distVal: {:f} prevDistVal: {:f}".format(distVal, prevDistVal))
-            except:
-                ""
-            break
-        prevDistVal = distVal
-        prevAreaVal = areaVal
-    return estDistance
-
+            if currArea < areaVal:
+                try:
+                    m = (distVal - prevDistVal)/(areaVal - prevAreaVal)
+                    b = distVal - (m * areaVal)
+                    estDistance = m * areaVal + b
+                    # estDistance = (distVal + prevDistVal) / 2.0
+                    print("areaHash: {:f} estimated dist: {:f}".format(currArea, estDistance))
+                    # print("distVal: {:f} prevDistVal: {:f}".format(distVal, prevDistVal))
+                except:
+                    ""
+                break
+            prevDistVal = distVal
+            prevAreaVal = areaVal
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
@@ -164,7 +152,7 @@ def main():
                 print(total / 200)
                 iteration = 0
                 total = 0
-            print("area: {:f}".format(currArea))
+            
             estDistance = distanceEstimate(currArea)
             table.putNumber('Distance', estDistance)
     print('Capture closed')
