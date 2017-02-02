@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 
 
@@ -59,6 +60,7 @@ def extra_processing(pipeline):
         ""
 
     return final_area
+
 
 def distanceEstimate(currArea):
     areaHash = {
