@@ -1,0 +1,42 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+GripPipeline	GRIP/grip.py	/^class GripPipeline:$/;"	kind:class	line:6
+GripRunner.py	GRIP-CodeGeneration/GripRunner.py	1;"	kind:file	line:1
+MyFilter	GRIP-CodeGeneration/mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	/^class MyFilter:$/;"	kind:class	line:5
+Retrotape	GRIP-CodeGeneration/retrotape.py	/^class Retrotape:$/;"	kind:class	line:6
+VideoCamera	GRIP-CodeGeneration/camera.py	/^class VideoCamera(object):$/;"	kind:class	line:4
+__cv_dilate	GRIP-CodeGeneration/retrotape.py	/^    def __cv_dilate(src, kernel, anchor, iterations, border_type, border_value):$/;"	kind:member	line:115
+__cv_erode	GRIP-CodeGeneration/retrotape.py	/^    def __cv_erode(src, kernel, anchor, iterations, border_type, border_value):$/;"	kind:member	line:100
+__del__	GRIP-CodeGeneration/camera.py	/^    def __del__(self):$/;"	kind:member	line:14
+__desaturate	GRIP/grip.py	/^    def __desaturate(src):$/;"	kind:member	line:29
+__filter_contours	GRIP-CodeGeneration/retrotape.py	/^    def __filter_contours(input_contours, min_area, min_perimeter, min_width, max_width,$/;"	kind:member	line:147
+__find_contours	GRIP-CodeGeneration/retrotape.py	/^    def __find_contours(input, external_only):$/;"	kind:member	line:130
+__hsv_threshold	GRIP-CodeGeneration/retrotape.py	/^    def __hsv_threshold(input, hue, sat, val):$/;"	kind:member	line:86
+__init__	GRIP-CodeGeneration/camera.py	/^    def __init__(self):$/;"	kind:member	line:5
+__init__	GRIP-CodeGeneration/retrotape.py	/^    def __init__(self):$/;"	kind:member	line:11
+__init__	GRIP/grip.py	/^    def __init__(self):$/;"	kind:member	line:11
+app	GRIP-CodeGeneration/main.py	/^app = Flask(__name__)$/;"	kind:variable	line:6
+camera.py	GRIP-CodeGeneration/camera.py	1;"	kind:file	line:1
+distanceEstimate	GRIP-CodeGeneration/run_cv.py	/^def distanceEstimate(currArea):$/;"	kind:function	line:63
+example_filter.py	GRIP-CodeGeneration/mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	1;"	kind:file	line:1
+exp.py	GRIP-CodeGeneration/exp.py	1;"	kind:file	line:1
+extra_processing	GRIP-CodeGeneration/GripRunner.py	/^def extra_processing(pipeline: GripPipeline):$/;"	kind:function	line:18
+extra_processing	GRIP-CodeGeneration/run_cv.py	/^def extra_processing(pipeline):$/;"	kind:function	line:19
+gen	GRIP-CodeGeneration/main.py	/^def gen(camera):$/;"	kind:function	line:12
+get_frame	GRIP-CodeGeneration/camera.py	/^    def get_frame(self):$/;"	kind:member	line:17
+grip.py	GRIP/grip.py	1;"	kind:file	line:1
+index	GRIP-CodeGeneration/main.py	/^def index():$/;"	kind:function	line:9
+init_filter	GRIP-CodeGeneration/mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	/^def init_filter():$/;"	kind:function	line:25
+main	GRIP-CodeGeneration/GripRunner.py	/^def main():$/;"	kind:function	line:29
+main	GRIP-CodeGeneration/run_cv.py	/^def main():$/;"	kind:function	line:127
+main.py	GRIP-CodeGeneration/main.py	1;"	kind:file	line:1
+process	GRIP-CodeGeneration/mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/filters/cvfilter_py/example_filter.py	/^    def process(self, img):$/;"	kind:member	line:7
+process	GRIP-CodeGeneration/retrotape.py	/^    def process(self, source0):$/;"	kind:member	line:60
+process	GRIP/grip.py	/^    def process(self, source0):$/;"	kind:member	line:19
+retrotape.py	GRIP-CodeGeneration/retrotape.py	1;"	kind:file	line:1
+run_cv.py	GRIP-CodeGeneration/run_cv.py	1;"	kind:file	line:1
+video_feed	GRIP-CodeGeneration/main.py	/^def video_feed():$/;"	kind:function	line:19

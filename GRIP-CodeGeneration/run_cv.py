@@ -126,7 +126,6 @@ def distanceEstimate(currArea):
         prevAreaVal = areaVal
     return estDistance
 
-
 def main():
     logging.basicConfig(level=logging.DEBUG)
     print('Initializing NetworkTables')
@@ -142,10 +141,12 @@ def main():
     cap = cv2.VideoCapture(0)
     print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    """
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 544)
     cap.set(cv2.CAP_PROP_EXPOSURE, 0)
     cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
+    """
 
     print('Running pipeline')
     iteration = 0
