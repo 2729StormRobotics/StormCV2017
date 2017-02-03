@@ -14,7 +14,7 @@ import time
 import logging
 import numpy as np
 from collections import OrderedDict
-
+RES = 544 # x resolution
 
 def extra_processing(pipeline):
     """
@@ -23,11 +23,13 @@ def extra_processing(pipeline):
     :return: sum area or rectangles
     """
     center_x_positions = []
+    midpoint_x = RES / 2 #half resolution
     center_y_positions = []
     widths = []
     heights = []
     areas = []
     final_area = 0
+    shift = 0
 
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
@@ -40,16 +42,25 @@ def extra_processing(pipeline):
         # areas.append(w * h) lw calculation
         areas.append(cv2.contourArea(contour))
     # Publish to the '/vision/red_areas' network table
+
     try:
         final_area = areas[0] + areas[1]
+        midpoint_x = (center_x_positions[0] + center_x_positions[1]) / 2
+        if center_x_positions[0] < center_x_positions[1]: #values are reported left to right
+            shift = heights[1] - heights[0] #return (-) if l-shift
+        else:
+            shift = heights[0] - heights[1] #return (+) if r-shift
     except:
-        ""
+        pass
+
     table = NetworkTables.getTable('Vision')
     table.putNumberArray('x', center_x_positions)
     table.putNumberArray('y', center_y_positions)
     table.putNumberArray('width', widths)
     table.putNumberArray('height', heights)
     table.putNumberArray('area', areas)
+    table.putNumber('shift', shift)
+    table.putNumber('midpoint_x', midpoint_x)
     return final_area
 
 def distanceEstimate(currArea):
@@ -156,7 +167,7 @@ def main():
                 total = 0
             
             estDistance = distanceEstimate(currArea)
-            table.putNumber('Distance', estDistance)
+            table.putNumber('est_distance', estDistance)
     print('Capture closed')
 
 if __name__ == '__main__':
