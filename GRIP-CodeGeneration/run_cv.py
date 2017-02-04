@@ -97,7 +97,7 @@ def distanceEstimate(currArea):
     for areaVal, distVal in areaHash.items():
         if currArea > 48800:
             estDistance = -0.648088 * np.log(0.0000191212 * currArea)
-                print("areaTrend: {:f} estimated dist: {:f}".format(currArea, estDistance))
+            print("areaTrend: {:f} estimated dist: {:f}".format(currArea, estDistance))
             break
 
         if currArea < areaVal:
