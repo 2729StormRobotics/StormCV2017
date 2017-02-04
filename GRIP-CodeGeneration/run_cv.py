@@ -7,6 +7,7 @@ Sample program that uses a generated GRIP pipeline to detect red areas in an ima
 
 import cv2
 import threading
+from datetime import datetime
 from networktables import NetworkTables
 from networktables import NetworkTable
 from retrotape import Retrotape
@@ -14,7 +15,7 @@ import time
 import logging
 import numpy as np
 from collections import OrderedDict
-RES = 544 # x resolution
+RES = 320 # x resolution
 
 def extra_processing(pipeline):
     """
@@ -52,6 +53,7 @@ def extra_processing(pipeline):
             shift = widths[0] - widths[1] #return (+) if r-shift
     except:
         pass
+    p_angle = (50/320)*abs(midpoint_x - (RES/2))
 
     table = NetworkTables.getTable('Vision')
     table.putNumberArray('x', center_x_positions)
@@ -61,6 +63,8 @@ def extra_processing(pipeline):
     table.putNumberArray('area', areas)
     table.putNumber('shift', shift)
     table.putNumber('midpoint_x', midpoint_x)
+    table.putNumber('p_angle', p_angle)
+    table.flush()
     return final_area
 
 def distanceEstimate(currArea):
@@ -104,8 +108,8 @@ def distanceEstimate(currArea):
             try:
                 m = (distVal - prevDistVal)/(areaVal - prevAreaVal)
                 b = distVal - (m * areaVal)
-                estDistance = m * areaVal + b
-                #estDistance = (distVal + prevDistVal) / 2.0
+                # estDistance = m * areaVal + b
+                estDistance = (distVal + prevDistVal) / 2.0
                 print("areaHash: {:f} estimated dist: {:f}".format(currArea, estDistance))
                 # print("distVal: {:f} prevDistVal: {:f}".format(distVal, prevDistVal))
             except:
@@ -118,10 +122,10 @@ def distanceEstimate(currArea):
 def main():
     logging.basicConfig(level=logging.DEBUG)
     print('Initializing NetworkTables')
-    # NetworkTable.setTeam('2729')
+    # NetworkTables.setTeam(2729)
     # NetworkTables.setClientMode()
     # NetworkTables.setIPAddress('10.27.29.202')
-    NetworkTables.initialize(server='10.27.29.50')
+    NetworkTables.initialize(server='roboRIO-2729-frc.local')
 
     print('Creating pipeline')
     pipeline = Retrotape()
@@ -131,8 +135,8 @@ def main():
     print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 544)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     cap.set(cv2.CAP_PROP_EXPOSURE, 0)
     cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
     
@@ -140,6 +144,7 @@ def main():
     print('Running pipeline')
     iteration = 0
     total = 0
+    curr_time = datetime.now()
     while cap.isOpened():
         have_frame, frame = cap.read()
         if have_frame:
@@ -150,6 +155,8 @@ def main():
             table = NetworkTables.getTable('Vision')
 
             if(iteration % 200 == 0):
+                table.putNumber('FPS', 200 / (datetime.now() - curr_time).total_seconds())
+                curr_time = datetime.now()
                 # table = NetworkTables.getTable('Vision')
                 table.putNumber('Average Area', total / 200)
                 print(total / 200)
