@@ -121,7 +121,7 @@ def main():
     # NetworkTable.setTeam('2729')
     # NetworkTables.setClientMode()
     # NetworkTables.setIPAddress('10.27.29.202')
-    NetworkTables.initialize(server='10.27.29.100')
+    NetworkTables.initialize(server='10.27.29.50')
 
     print('Creating pipeline')
     pipeline = Retrotape()
