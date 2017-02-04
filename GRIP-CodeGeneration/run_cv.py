@@ -64,37 +64,28 @@ def extra_processing(pipeline):
     return final_area
 
 def distanceEstimate(currArea):
-    areaHash = {
-        13000: .7,
-        11850: .8,
-        9370: .9,
-        7830: 1,
-        6500: 1.1,
-        5470: 1.2,
-        4650: 1.3,
-        3925: 1.4,
-        3500: 1.5,
-        3100: 1.6,
-        2770: 1.7,
-        2390: 1.8,
-        2260: 1.9,
-        2060: 2,
-        1880: 2.1,
-        1735: 2.2,
-        1620: 2.3,
-        1455: 2.4,
-        1375: 2.5,
-        1210: 2.6,
-        1035: 2.7,
-        1000: 2.8,
-        975: 2.9,
-        940: 3,
-        845: 3.1,
-        780: 3.2,
-        750: 3.3,
-        695: 3.4,
-        655: 3.5,
-        630: 3.6}
+    areaHash = {48800: 0.4,
+                33785: 0.5,
+                24215: 0.6,
+                18180: 0.7,
+                13689: 0.8,
+                11272: 0.9,
+                9235: 1.0,
+                7715: 1.1,
+                6570: 1.2,
+                5619: 1.3,
+                4897: 1.4,
+                4235: 1.5,
+                3795: 1.6,
+                3375: 1.7,
+                3090: 1.8,
+                2718: 1.9,
+                2432: 2.0,
+                2142: 2.1,
+                1961: 2.2,
+                1723: 2.3,
+                1587: 2.4,
+                1450: 2.5}
 
     estDistance = 0
     prevDistVal = 0
@@ -104,10 +95,8 @@ def distanceEstimate(currArea):
     values = areaHash.values()
 
     for areaVal, distVal in areaHash.items():
-        if currArea > 13000:
-            estDistance = -1.0142 * np.log(0.0000578938 * currArea)
-            if estDistance > 1.3 and estDistance < 2:
-                estDistance -= 0.1
+        if currArea > 48800:
+            estDistance = -0.648088 * np.log(0.0000191212 currArea)
                 print("areaTrend: {:f} estimated dist: {:f}".format(currArea, estDistance))
             break
 
@@ -141,12 +130,12 @@ def main():
     cap = cv2.VideoCapture(0)
     print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    """
+    
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 544)
     cap.set(cv2.CAP_PROP_EXPOSURE, 0)
     cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
-    """
+    
 
     print('Running pipeline')
     iteration = 0
