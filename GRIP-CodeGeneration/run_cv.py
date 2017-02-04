@@ -127,15 +127,16 @@ def main():
     pipeline = Retrotape()
 
     print('Creating video capture')
-    cap = cv2.VideoCapture(0)
+    # cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(http://storm-rpi1.local:1181/?action=stream)
     print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    
+
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 544)
     cap.set(cv2.CAP_PROP_EXPOSURE, 0)
     cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
-    
+
 
     print('Running pipeline')
     iteration = 0
@@ -155,7 +156,7 @@ def main():
                 print(total / 200)
                 iteration = 0
                 total = 0
-            
+
             estDistance = distanceEstimate(currArea)
             table.putNumber('est_distance', estDistance)
     print('Capture closed')
