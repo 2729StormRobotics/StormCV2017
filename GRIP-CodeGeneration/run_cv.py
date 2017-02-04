@@ -105,7 +105,7 @@ def distanceEstimate(currArea):
                 m = (distVal - prevDistVal)/(areaVal - prevAreaVal)
                 b = distVal - (m * areaVal)
                 estDistance = m * areaVal + b
-                # estDistance = (distVal + prevDistVal) / 2.0
+                estDistance = (distVal + prevDistVal) / 2.0
                 print("areaHash: {:f} estimated dist: {:f}".format(currArea, estDistance))
                 # print("distVal: {:f} prevDistVal: {:f}".format(distVal, prevDistVal))
             except:
