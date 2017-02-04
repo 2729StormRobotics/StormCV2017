@@ -12,9 +12,9 @@ class Retrotape:
         """initializes all values to presets or None if need to be set
         """
 
-        self.__hsv_threshold_hue = [53.417266187050366, 85.26315789473685]
-        self.__hsv_threshold_saturation = [222.43705035971223, 255.0]
-        self.__hsv_threshold_value = [64.20863309352518, 255.0]
+        self.__hsv_threshold_hue = [71.33420008730808, 91.4086405315041]
+        self.__hsv_threshold_saturation = [146.4689265536723, 255.0]
+        self.__hsv_threshold_value = [148.87005649717514, 255.0]
 
         self.hsv_threshold_output = None
 
