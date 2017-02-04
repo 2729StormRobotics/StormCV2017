@@ -47,9 +47,9 @@ def extra_processing(pipeline):
         final_area = areas[0] + areas[1]
         midpoint_x = (center_x_positions[0] + center_x_positions[1]) / 2
         if center_x_positions[0] < center_x_positions[1]: #values are reported left to right
-            shift = heights[1] - heights[0] #return (-) if l-shift
+            shift = widths[1] - widths[0] #return (-) if l-shift
         else:
-            shift = heights[0] - heights[1] #return (+) if r-shift
+            shift = widths[0] - widths[1] #return (+) if r-shift
     except:
         pass
 
