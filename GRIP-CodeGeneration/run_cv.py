@@ -22,6 +22,7 @@ def extra_processing(pipeline):
     :param pipeline: the pipeline that just processed an image
     :return: sum area or rectangles
     """
+
     center_x_positions = []
     midpoint_x = RES / 2 #half resolution
     center_y_positions = []
@@ -42,6 +43,7 @@ def extra_processing(pipeline):
         # areas.append(w * h) lw calculation
         areas.append(cv2.contourArea(contour))
     # Publish to the '/vision/red_areas' network table
+
 
     try:
         final_area = areas[0] + areas[1]
