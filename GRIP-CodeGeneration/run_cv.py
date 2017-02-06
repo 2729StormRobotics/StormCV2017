@@ -55,7 +55,7 @@ def extra_processing(pipeline):
             shift = widths[0] - widths[1] #return (+) if r-shift
     except:
         pass
-    p_angle = (50/320)*abs(midpoint_x - (RES/2))
+    p_angle = (50/320)*(midpoint_x - (RES/2))
 
     table = NetworkTables.getTable('Vision')
     table.putNumberArray('x', center_x_positions)
@@ -63,8 +63,10 @@ def extra_processing(pipeline):
     table.putNumberArray('width', widths)
     table.putNumberArray('height', heights)
     table.putNumberArray('area', areas)
+
     table.putNumber('shift', shift)
     table.putNumber('midpoint_x', midpoint_x)
+    table.putNumber('center_dist', midpoint_x - (RES/2))
     table.putNumber('p_angle', p_angle)
     table.flush()
     return final_area
@@ -92,7 +94,7 @@ def distanceEstimate(currArea):
                 1723: 2.3,
                 1587: 2.4,
                 1450: 2.5}
-
+    currArea = currArea
     estDistance = 0
     prevDistVal = 0
     prevAreaVal = 0
@@ -128,7 +130,7 @@ def main():
     # NetworkTables.setClientMode()
     # NetworkTables.setIPAddress('10.27.29.202')
     NetworkTables.initialize(server='roboRIO-2729-frc.local')
-
+    
     print('Creating pipeline')
     pipeline = Retrotape()
 
@@ -165,8 +167,8 @@ def main():
                 print(total / 200)
                 iteration = 0
                 total = 0
-
-            estDistance = distanceEstimate(currArea)
+            scaling = 5.5
+            estDistance = distanceEstimate(currArea * scaling)
             table.putNumber('est_distance', estDistance)
     print('Capture closed')
 
