@@ -68,6 +68,7 @@ def extra_processing(pipeline):
     table.putNumber('midpoint_x', midpoint_x)
     table.putNumber('center_dist', midpoint_x - (RES/2))
     table.putNumber('p_angle', p_angle)
+    #table.putNumber('width_ratio')
     table.flush()
     return final_area
 
@@ -167,7 +168,7 @@ def main():
                 print(total / 200)
                 iteration = 0
                 total = 0
-            scaling = 5.5
+            scaling = 6.8
             estDistance = distanceEstimate(currArea * scaling)
             table.putNumber('est_distance', estDistance)
     print('Capture closed')
