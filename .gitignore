@@ -1,5 +1,5 @@
 
-# Created by https://www.gitignore.io/api/windows,linux,osx,python,vim,emacs,visualstudio,visualstudiocode,eclipse,pycharm
+# Created by https://www.gitignore.io/api/linux,windows,osx,vim,emacs,notepadpp,visualstudio,visualstudiocode,sublimetext,pycharm,python,eclipse,git
 
 ### Eclipse ###
 
@@ -101,6 +101,9 @@ flycheck_*.el
 # directory configuration
 .dir-locals.el
 
+### Git ###
+*.orig
+
 ### Linux ###
 
 # temporary files which can be created if a process still has a handle open of a deleted file
@@ -114,6 +117,9 @@ flycheck_*.el
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+
+### NotepadPP ###
+# Notepad++ backups #
 
 ### OSX ###
 *.DS_Store
@@ -286,6 +292,38 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+### SublimeText ###
+# cache files for sublime text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# workspace files are user-specific
+*.sublime-workspace
+
+# project files should be checked into the repository, unless a significant
+# proportion of contributors will probably not be using SublimeText
+# *.sublime-project
+
+# sftp configuration file
+sftp-config.json
+
+# Package control specific files
+Package Control.last-run
+Package Control.ca-list
+Package Control.ca-bundle
+Package Control.system-ca-bundle
+Package Control.cache/
+Package Control.ca-certs/
+Package Control.merged-ca-bundle
+Package Control.user-ca-bundle
+oscrypto-ca-bundle.crt
+bh_unicode_properties.cache
+
+# Sublime-github package stores a github token in this file
+# https://packagecontrol.io/packages/sublime-github
+GitHub.sublime-settings
 
 ### Vim ###
 # swap
@@ -601,4 +639,4 @@ paket-files/
 # tools/**
 # !tools/packages.config
 
-# End of https://www.gitignore.io/api/windows,linux,osx,python,vim,emacs,visualstudio,visualstudiocode,eclipse,pycharm
+# End of https://www.gitignore.io/api/linux,windows,osx,vim,emacs,notepadpp,visualstudio,visualstudiocode,sublimetext,pycharm,python,eclipse,git
