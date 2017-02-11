@@ -1,10 +1,5 @@
 #!/usr/bin/python3
 
-
-"""
-Sample program that uses a generated GRIP pipeline to detect red areas in an image and publish them to NetworkTables.
-"""
-
 import cv2
 import threading
 from datetime import datetime
@@ -17,13 +12,51 @@ import numpy as np
 from collections import OrderedDict
 RES = 320 # x resolution
 
-def extra_processing(pipeline):
-    """
-    Performs extra processing on the pipeline's outputs and publishes data to NetworkTables.
-    :param pipeline: the pipeline that just processed an image
-    :return: sum area or rectangles
-    """
+def main():
+    logging.basicConfig(level=logging.DEBUG)
+    print('Initializing NetworkTables')
+    # NetworkTables.setTeam(2729)
+    # NetworkTables.setClientMode()
+    # NetworkTables.setIPAddress('10.27.29.202')
+    NetworkTables.initialize(server='roboRIO-2729-frc.local')
 
+    print('Creating pipeline')
+    pipeline = Retrotape()
+
+    print('Creating video capture')
+    cap = cv2.VideoCapture(0)
+    camSetup(cap)
+    print('Running pipeline')
+
+    iteration = 0
+    total_area = 0
+    curr_time = datetime.now()
+    table = NetworkTables.getTable('Vision')
+
+    while cap.isOpened():
+        have_frame, frame = cap.read()
+        if have_frame:
+            pipeline.process(frame)
+            publishValues(pipeline)
+            total_area += table.getNumber('currArea')
+            iteration += 1
+
+            if(iteration % 200 == 0):
+                avgValues(total_area, curr_time, 200)
+                iteration = 0
+                total = 0
+    print('Capture closed')
+
+def camSetup(cap):
+    print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+    cap.set(cv2.CAP_PROP_EXPOSURE, 0)
+    cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
+
+def publishValues(pipeline):
     center_x_positions = []
     midpoint_x = RES / 2 #half resolution
     center_y_positions = []
@@ -36,25 +69,21 @@ def extra_processing(pipeline):
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
-        # X and Y are coordinates of the top-left corner of the bounding box
         center_x_positions.append(x + w / 2)
         center_y_positions.append(y + h / 2)
         widths.append(w)
         heights.append(h)
-        # areas.append(w * h) lw calculation
         areas.append(cv2.contourArea(contour))
-    # Publish to the '/vision/red_areas' network table
-
 
     try:
         final_area = areas[0] + areas[1]
         midpoint_x = (center_x_positions[0] + center_x_positions[1]) / 2
-        if center_x_positions[0] < center_x_positions[1]: #values are reported left to right
-            shift = widths[1] - widths[0] #return (-) if l-shift
-        else:
-            shift = widths[0] - widths[1] #return (+) if r-shift
+        shift = shiftEstimate(center_x_positions)
     except:
         pass
+
+    scaling = 6.8
+    estDistance = distanceEstimate(currArea * scaling)
     p_angle = (50/320)*(midpoint_x - (RES/2))
 
     table = NetworkTables.getTable('Vision')
@@ -68,9 +97,15 @@ def extra_processing(pipeline):
     table.putNumber('midpoint_x', midpoint_x)
     table.putNumber('center_dist', midpoint_x - (RES/2))
     table.putNumber('p_angle', p_angle)
-    #table.putNumber('width_ratio')
+    table.putNumber('est_distance', estDistance)
+    table.putNumber('curr_area', final_area)
     table.flush()
-    return final_area
+
+def shiftEstimate(center_x_positions):
+    if center_x_positions[0] < center_x_positions[1]: #values are reported left to right
+        shift = widths[1] - widths[0] #return (-) if l-shift
+    else:
+        shift = widths[0] - widths[1] #return (+) if r-shift
 
 def distanceEstimate(currArea):
     areaHash = {48800: 0.4,
@@ -118,61 +153,17 @@ def distanceEstimate(currArea):
                 print("areaHash: {:f} estimated dist: {:f}".format(currArea, estDistance))
                 # print("distVal: {:f} prevDistVal: {:f}".format(distVal, prevDistVal))
             except:
-                ""
+                pass
             break
         prevDistVal = distVal
         prevAreaVal = areaVal
     return estDistance
 
-def main():
-    logging.basicConfig(level=logging.DEBUG)
-    print('Initializing NetworkTables')
-    # NetworkTables.setTeam(2729)
-    # NetworkTables.setClientMode()
-    # NetworkTables.setIPAddress('10.27.29.202')
-    NetworkTables.initialize(server='roboRIO-2729-frc.local')
-    
-    print('Creating pipeline')
-    pipeline = Retrotape()
-
-    print('Creating video capture')
-    cap = cv2.VideoCapture(0)
-    # cap = cv2.VideoCapture(http://storm-rpi1.local:1181/?action=stream)
-    print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
-    cap.set(cv2.CAP_PROP_EXPOSURE, 0)
-    cap.set(cv2.CAP_PROP_BRIGHTNESS, 30)
-
-
-    print('Running pipeline')
-    iteration = 0
-    total = 0
+def avgValues(area, curr_time, cycles):
+    table.putNumber('FPS', cycles / (datetime.now() - curr_time).total_seconds())
     curr_time = datetime.now()
-    while cap.isOpened():
-        have_frame, frame = cap.read()
-        if have_frame:
-            pipeline.process(frame)
-            currArea = extra_processing(pipeline)
-            total += currArea
-            iteration += 1
-            table = NetworkTables.getTable('Vision')
-
-            if(iteration % 200 == 0):
-                table.putNumber('FPS', 200 / (datetime.now() - curr_time).total_seconds())
-                curr_time = datetime.now()
-                # table = NetworkTables.getTable('Vision')
-                table.putNumber('Average Area', total / 200)
-                print(total / 200)
-                iteration = 0
-                total = 0
-            scaling = 6.8
-            estDistance = distanceEstimate(currArea * scaling)
-            table.putNumber('est_distance', estDistance)
-    print('Capture closed')
+    table.putNumber('Average Area', area / cycles)
+    print(total / cycles)
 
 if __name__ == '__main__':
     main()
-
