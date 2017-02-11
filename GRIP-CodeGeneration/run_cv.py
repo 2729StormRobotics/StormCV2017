@@ -37,7 +37,7 @@ def main():
         if have_frame:
             pipeline.process(frame)
             publishValues(pipeline)
-            total_area += table.getNumber('currArea')
+            total_area += table.getNumber('curr_area')
             iteration += 1
 
             if(iteration % 200 == 0):
@@ -82,7 +82,7 @@ def publishValues(pipeline):
         pass
 
     scaling = 6.8
-    estDistance = distanceEstimate(currArea * scaling)
+    estDistance = distanceEstimate(final_area * scaling)
     p_angle = (50/320)*(midpoint_x - (RES/2))
 
     table = NetworkTables.getTable('Vision')
@@ -159,10 +159,11 @@ def distanceEstimate(currArea):
     return estDistance
 
 def avgValues(area, curr_time, cycles):
+    table = NetworkTables.getTable('Vision')
     table.putNumber('FPS', cycles / (datetime.now() - curr_time).total_seconds())
     curr_time = datetime.now()
     table.putNumber('Average Area', area / cycles)
-    print(total / cycles)
+    print(area / cycles)
 
 if __name__ == '__main__':
     main()
