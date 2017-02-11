@@ -5,7 +5,7 @@ import threading
 from datetime import datetime
 from networktables import NetworkTables
 #from retrotape import Retrotape
-from retrotapehsl import RetrotapeHSL
+from retrotapestream import RetrotapeStream
 import time
 import logging
 import numpy as np
@@ -22,11 +22,12 @@ def main():
 
     print('Creating pipeline')
     #pipeline = Retrotape()
-    pipeline = RetrotapeHSL()
+    pipeline = RetrotapeStream()
 
     print('Creating video capture')
-    cap = cv2.VideoCapture(0)
-    camSetup(cap)
+    cap = cv2.VideoCapture('http://localhost:5801/?action=stream')
+    # cap = cv2.VideoCapture(0)
+    # camSetup(cap)
     print('Running pipeline')
 
     iteration = 0
