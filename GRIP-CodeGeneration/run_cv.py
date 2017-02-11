@@ -4,7 +4,8 @@ import cv2
 import threading
 from datetime import datetime
 from networktables import NetworkTables
-from retrotape import Retrotape
+#from retrotape import Retrotape
+from retrotapehsl import RetrotapeHSL
 import time
 import logging
 import numpy as np
@@ -20,7 +21,8 @@ def main():
     NetworkTables.initialize(server='roboRIO-2729-frc.local')
 
     print('Creating pipeline')
-    pipeline = Retrotape()
+    #pipeline = Retrotape()
+    pipeline = RetrotapeHSL()
 
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
