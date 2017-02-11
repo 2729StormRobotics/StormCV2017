@@ -28,6 +28,11 @@ OpenCV3 is a [bit more of a pain](http://www.pyimagesearch.com/2016/04/18/instal
 
 Also on a windows computer you will need [Eclipse with the wpilib plugins](http://wpilib.screenstepslive.com/s/4485/m/13503/l/599679-installing-eclipse-c-java)
 
+Lastly you'll need NetworkTables to communicate between the pi and your robot
+```
+pip install pynetworktables
+```
+
 ## Running the Code
 
 Assuming you've gotten all the installs running the code is fairly straightforward
