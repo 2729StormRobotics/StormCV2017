@@ -4,7 +4,6 @@ import cv2
 import threading
 from datetime import datetime
 from networktables import NetworkTables
-from networktables import NetworkTable
 from retrotape import Retrotape
 import time
 import logging
