@@ -80,7 +80,7 @@ def publishValues(pipeline):
     try:
         final_area = areas[0] + areas[1]
         midpoint_x = (center_x_positions[0] + center_x_positions[1]) / 2
-        shift = shiftEstimate(center_x_positions)
+        shift = shiftEstimate(center_x_positions, widths)
     except:
         pass
 
@@ -102,12 +102,14 @@ def publishValues(pipeline):
     table.putNumber('est_distance', estDistance)
     table.putNumber('curr_area', final_area)
     table.flush()
+    print("Shift: {:f}".format(shift))
 
-def shiftEstimate(center_x_positions):
+def shiftEstimate(center_x_positions, widths):
     if center_x_positions[0] < center_x_positions[1]: #values are reported left to right
         shift = widths[1] - widths[0] #return (-) if l-shift
     else:
         shift = widths[0] - widths[1] #return (+) if r-shift
+    return shift
 
 def distanceEstimate(currArea):
     areaHash = {48800: 0.4,
