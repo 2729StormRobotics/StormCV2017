@@ -45,6 +45,7 @@ def main():
 
             if(iteration % 200 == 0):
                 avgValues(total_area, curr_time, 200)
+                curr_time = datetime.now()
                 iteration = 0
                 total = 0
     print('Capture closed')
@@ -67,9 +68,10 @@ def publishValues(pipeline):
     areas = []
     final_area = 0
     shift = 0
-
+    targetSeen = 0
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
+        targetSeen = 2
         x, y, w, h = cv2.boundingRect(contour)
         center_x_positions.append(x + w / 2)
         center_y_positions.append(y + h / 2)
@@ -138,6 +140,9 @@ def distanceEstimate(currArea):
     estDistance = 0
     prevDistVal = 0
     prevAreaVal = 0
+    if currArea == 0:
+        print("AHH IM BLIND")
+        return 0.2 # value recognized to stop
 
     areaHash = OrderedDict(sorted(areaHash.items(), key = lambda areaHash: areaHash[0]))
     values = areaHash.values()
@@ -166,7 +171,6 @@ def distanceEstimate(currArea):
 def avgValues(area, curr_time, cycles):
     table = NetworkTables.getTable('Vision')
     table.putNumber('FPS', cycles / (datetime.now() - curr_time).total_seconds())
-    curr_time = datetime.now()
     table.putNumber('Average Area', area / cycles)
     print(area / cycles)
 
