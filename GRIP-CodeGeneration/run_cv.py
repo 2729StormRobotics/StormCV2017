@@ -71,7 +71,7 @@ def publishValues(pipeline):
     targetSeen = 0
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
-        targetSeen = 2
+        targetSeen += 1
         x, y, w, h = cv2.boundingRect(contour)
         center_x_positions.append(x + w / 2)
         center_y_positions.append(y + h / 2)
@@ -91,6 +91,7 @@ def publishValues(pipeline):
     p_angle = (50/320)*(midpoint_x - (RES/2))
 
     table = NetworkTables.getTable('Vision')
+    table.putNumber('targets', targetSeen)
     table.putNumberArray('x', center_x_positions)
     table.putNumberArray('y', center_y_positions)
     table.putNumberArray('width', widths)
