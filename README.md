@@ -1,4 +1,5 @@
 # StormCV2017
-Computer Vision code for the 2017 FRC season
-This is a GRIP based vision system.  We utilize the "Genereate Code" feature in order to run python code on our Raspberry pi 3.
-We're using python 3 and OpenCV 3.
+
+This is the dev branch of the Storm 2017 Vision System.  Code that is unstable or untested stays here.  After testing we move it over to master.
+
+
